@@ -6,10 +6,9 @@ function EditAvatarPopup ({isOpen, onClose, onUpdateAvatar}) {
 
   const {handleChange, values, errors, isValid, isInputValid, reset} = useFormValidation();
 
-  function resetClose(){ 
-    onClose()
-    reset()
-  }
+  React.useEffect(() => {
+    reset();
+  }, [isOpen]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -22,7 +21,7 @@ function EditAvatarPopup ({isOpen, onClose, onUpdateAvatar}) {
       title="Обновить аватар"
       btnText="Сохранить"
       isOpen={isOpen} 
-      onClose={resetClose}
+      onClose={onClose}
       onSubmit={handleSubmit}
       isValid={isValid}
     >

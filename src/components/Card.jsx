@@ -10,6 +10,10 @@ function Card ({card, onCardClick, onDeleteCard, onCardLike}) {
   function handleClick() {
     onCardClick(card);
   }
+  
+  function handleDelete() {
+    onDeleteCard(card._id);
+  }
 
   return (
     <div className="cards__item">
@@ -19,12 +23,12 @@ function Card ({card, onCardClick, onDeleteCard, onCardLike}) {
         alt={card.name} 
         onClick={handleClick}
       />
-      {isOwn  && <button type="button" className="cards__trash" aria-label="Удалить" onClick={() => onDeleteCard(card._id)}/>}
+      {isOwn && <button type="button" className="cards__trash" aria-label="Удалить" onClick={handleDelete}/>}
       <div className="cards__description">
         <h2 className="cards__title">{card.name}</h2>
         <div className="cards__like-container">
         <Like 
-          myid={currentUser._id} 
+          myId={currentUser._id} 
           onCardLike={onCardLike}
           card={card}
         />

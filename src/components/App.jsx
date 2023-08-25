@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, Navigate} from "react-router-dom";
 import Header from "./Header.jsx";
 import Main from './Main.jsx';
 import Footer from './Footer.jsx';
@@ -14,7 +14,7 @@ import ProtectedRouteElement from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
-import {register, authorize, getContent} from "../utils/auth.js"
+import {register, authorize, checkToken} from "../utils/auth.js"
 
 function App() {
 
@@ -22,16 +22,16 @@ function App() {
   const [isAddPlacePopupOpen, setAddPopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
-  const [isDeletePopup, setDeleteCardPopup] = React.useState(false);
-  const [isImagePopup, setImagePopup] = React.useState(false);
+  const [isDeletePopupOpen, setDeleteCardPopupOpen] = React.useState(false);
+  const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [deleteCardId, setDeleteCardId] = React.useState("");
 
   const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
-  const [isRegister, setRegister] = React.useState(false);
+  const [isSuccessInfoTooltipStatus, setSuccessInfoTooltipStatus] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [email, setEmail] = React.useState();
+  const [email, setEmail] = React.useState("");
 
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ function App() {
         setCurrentUser(dataUser);
         setCards(dataCard);
       }) 
-      .catch((error => console.error(`Ошибка ${error}`)))
+      .catch((error => console.log(`Ошибка ${error}`)))
     }
   }, [loggedIn])
 
@@ -52,7 +52,7 @@ function App() {
     // если у пользователя есть токен в localStorage, 
     // функция проверит, действующий он или нет
     if (token){
-      getContent(token)
+      checkToken(token)
         .then((res) => {
           if (res) {
             setLoggedIn(true);
@@ -60,28 +60,26 @@ function App() {
             navigate('/', {replace: true})
           }
         })
-        .catch(console.error);
+        .catch((error => console.log(`Ошибка проверки токена ${error}`)))
     }
-  }, [loggedIn]);
+  }, []);
 
   //Обработка запроса на регистрацию
   function handleRegister(email, password) {
     register(email, password)
     .then((res) => {
       if (res) {
-        setRegister(true);
-        infoTooltipPopupOpen()
+        setSuccessInfoTooltipStatus(true);
         navigate('/sign-in', {replace: true});
       } else {
-        infoTooltipPopupOpen()
-        setRegister(false);
+        setSuccessInfoTooltipStatus(false);
       }
     })
-    .catch(() => {
-      infoTooltipPopupOpen()
-      setRegister(false);
-      console.error();
+    .catch((error) => {
+      setSuccessInfoTooltipStatus(false);
+      console.log(`Ошибка регистрации ${error}`);
     })
+    .finally(() => openInfoTooltip());
   }
 
   //Изменение статуса логина
@@ -89,7 +87,7 @@ function App() {
     setLoggedIn(true);
   }
 
-  function infoTooltipPopupOpen() {
+  function openInfoTooltip() {
     setInfoTooltipOpen(true);
   }
 
@@ -103,10 +101,11 @@ function App() {
         navigate('/', {replace: true})
       }
     })
-    .catch(() => {
+    .catch((error) => {
+      openInfoTooltip()
       setLoggedIn(false);
-      infoTooltipPopupOpen()
-      console.error();
+      setSuccessInfoTooltipStatus(false)
+      console.log(`Ошибка авторизации ${error}`);
     })
   }
 
@@ -115,6 +114,7 @@ function App() {
     setLoggedIn(false);
     localStorage.removeItem("token");
     navigate("/sign-in");
+    setEmail("");
   }
 
   function handleEditProfileClick() {
@@ -131,11 +131,11 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
-    setImagePopup(true);
+    setImagePopupOpen(true);
   }
 
   function handleDeleteCard(cardId) {
-    setDeleteCardPopup(true);  
+    setDeleteCardPopupOpen(true);  
     setDeleteCardId(cardId) 
   }
 
@@ -143,8 +143,8 @@ function App() {
     setEditPopupOpen(false)
     setAvatarPopupOpen(false)
     setAddPopupOpen(false)
-    setDeleteCardPopup(false)
-    setImagePopup(false)
+    setDeleteCardPopupOpen(false)
+    setImagePopupOpen(false)
     setInfoTooltipOpen(false)
   }
 
@@ -219,6 +219,7 @@ function App() {
         <Routes>
           <Route path="/sign-up" element={<Register onRegister={handleRegister}/>}/>
           <Route path="/sign-in" element={<Login onLogin={handleLogin}/>}/>
+          <Route path="*" element={<Navigate to={loggedIn ? "/" : "/sign-in"} />} />
           <Route
             path="/"
             element={<ProtectedRouteElement 
@@ -239,11 +240,11 @@ function App() {
           name="info"
           isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}
-          isConfirmed={isRegister}
+          isConfirmed={isSuccessInfoTooltipStatus}
         />
         <ImagePopup
           card={selectedCard}
-          isOpen={isImagePopup}
+          isOpen={isImagePopupOpen}
           onClose={closeAllPopups}
         /> 
         <EditProfilePopup
@@ -262,7 +263,7 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
         <DeletePopupCard
-          isOpen={isDeletePopup}
+          isOpen={isDeletePopupOpen}
           onClose={closeAllPopups}
           onCardDelete={handleDeleteSubmit}
         />

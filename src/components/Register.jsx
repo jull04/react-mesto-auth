@@ -4,11 +4,7 @@ import useFormValidation from "../hooks/useFormValidation";
 
 function Register ({onRegister}) {
 
-  const {handleChange, values, errors, isValid, } = useFormValidation();
-
-  // React.useEffect(() => {
-  //   reset();
-  // }, [reset]);
+  const {handleChange, values, errors, isValid} = useFormValidation();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -50,8 +46,7 @@ function Register ({onRegister}) {
         </div>
         </form>
         <p className="auth__signin">
-        Уже зарегистрированы?{" "}
-        <Link to="/sign-in" className="auth__link">{" "}Войти</Link>
+          Уже зарегистрированы?{" "} <Link to="/sign-in" className="auth__link">{" "}Войти</Link>
         </p>
       </div>
     </main>

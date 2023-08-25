@@ -1,12 +1,12 @@
 import React from "react";
 
-function Like({myid, card, onCardLike}) {
+function Like({myId, card, onCardLike}) {
 
   const [isLike, setIsLike] = React.useState(false);
 
   React.useEffect(() => {
-    setIsLike(card.likes.some((element) => myid === element._id))
-  }, [card, myid])
+    setIsLike(card.likes.some((element) => myId === element._id))
+  }, [card, myId])
 
   return (
     <>

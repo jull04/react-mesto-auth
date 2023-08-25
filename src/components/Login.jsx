@@ -5,10 +5,6 @@ function Login ({onLogin}) {
 
   const {handleChange, values, errors, isValid} = useFormValidation();
 
-  // React.useEffect(() => {
-  //   reset();
-  // }, [reset]);
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if (!values.email || !values.password) {
@@ -46,7 +42,7 @@ function Login ({onLogin}) {
           />
           <span className="autho__error auth__error_visible">{errors.password}</span>
           <div className="auth__button-container">
-            <button disabled={!isValid} type="submit" className={isValid ? "auth__button" : "auth__button auth__button_disabled"}>
+            <button disabled={!isValid} type="submit" className={`auth__button ${isValid ? "" : "auth__button_disabled"}`}>
               Войти
             </button>
           </div>

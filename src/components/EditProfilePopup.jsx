@@ -4,7 +4,9 @@ import PopupWithForm from "./PopupWithForm"
 import React from "react";
 
 function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
+
   const currentUser = React.useContext(CurrentUserContext);  
+
   const {handleChange, values, errors, isValid, isInputValid, reset, setValue} = useFormValidation();
 
   React.useEffect(() => {
@@ -12,10 +14,9 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
     setValue("job", currentUser.about)
   },[currentUser, setValue])
 
-  function resetClose(){
-    onClose()
-    reset({firstname: currentUser.name, job: currentUser.about})   
-  }
+  React.useEffect(() => {
+    reset({firstname: currentUser.name, job: currentUser.about})
+  }, [isOpen]);
 
   function handleSubmit(evt){
     evt.preventDefault();
@@ -28,7 +29,7 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
       title="Редактировать профиль"
       btnText="Сохранить" 
       isOpen={isOpen}
-      onClose={resetClose}
+      onClose={onClose}
       isValid={isValid}
       onSubmit={handleSubmit}
     >
