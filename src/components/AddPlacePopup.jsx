@@ -12,7 +12,7 @@ function AddPlacePopup ({isOpen, onClose, onAddPlace}) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    onAddPlace({title: values.title, link: values.link}, reset); 
+    onAddPlace({title: values.title, link: values.link}); 
   }
 
   return(
