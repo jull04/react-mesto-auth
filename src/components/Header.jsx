@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Link} from "react-router-dom";
 
-function Header({ loggedIn, onLogout }) {
+function Header({loggedIn, onLogout, email}) {
 
   const buttonText = loggedIn ? "Выйти" : "";
   
@@ -14,19 +14,23 @@ function Header({ loggedIn, onLogout }) {
             <Link to="/sign-in" className="header__link header__button">
               Войти
             </Link>
-          }
-          />
+          }/>
+
           <Route path="/sign-in" element={
             <Link to="/sign-up" className="header__link header__button">
               Регистрация
             </Link>
-          }
-          />
+          }/>
+
+          <Route path="/" element={loggedIn && (
+            <>
+              <p className="header__email">{email}</p>
+              <button className="header__link header__button" onClick={onLogout}>
+                Выйти
+              </button>
+            </>
+          )}/>
         </Routes>
-        {loggedIn && (<button className="header__link header__button" onClick={onLogout}>
-          {buttonText}
-        </button>
-        )}
       </div>
     </header>
   )
