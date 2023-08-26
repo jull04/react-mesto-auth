@@ -20,7 +20,7 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
 
   function handleSubmit(evt){
     evt.preventDefault();
-    onUpdateUser({firstname: values.firstname, job: values.job}, reset) 
+    onUpdateUser({firstname: values.firstname, job: values.job}) 
   }
 
   return (
