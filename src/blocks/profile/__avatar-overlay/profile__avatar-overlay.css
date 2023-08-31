@@ -34,3 +34,9 @@
   transition: opasity .3s linear;
   cursor: pointer;
 }
+
+@media  screen and (max-width: 767px) {
+  .profile__avatar-overlay {
+    margin: 36px 79px 20px;
+  }
+}
