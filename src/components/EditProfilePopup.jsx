@@ -1,20 +1,20 @@
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import useFormValidation from "../hooks/useFormValidation";
 import PopupWithForm from "./PopupWithForm"
-import React from "react";
+import React, {useEffect} from "react";
 
-function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
+function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoading}) {
 
   const currentUser = React.useContext(CurrentUserContext);  
 
   const {handleChange, values, errors, isValid, isInputValid, reset, setValue} = useFormValidation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValue("firstname", currentUser.name)
     setValue("job", currentUser.about)
   },[currentUser, setValue])
 
-  React.useEffect(() => {
+  useEffect(() => {
     reset({firstname: currentUser.name, job: currentUser.about})
   }, [isOpen]);
 
@@ -27,7 +27,7 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
     <PopupWithForm
       name="edit"
       title="Редактировать профиль"
-      btnText="Сохранить" 
+      btnText={isLoading ? "Сохранение..." : "Сохранить"}
       isOpen={isOpen}
       onClose={onClose}
       isValid={isValid}

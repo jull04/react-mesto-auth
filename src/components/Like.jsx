@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 function Like({myId, card, onCardLike}) {
 
   const [isLike, setIsLike] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsLike(card.likes.some((element) => myId === element._id))
   }, [card, myId])
 
