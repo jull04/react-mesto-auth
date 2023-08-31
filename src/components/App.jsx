@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes, useNavigate, Navigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {Route, Routes, useNavigate, Navigate} from "react-router-dom";
 import Header from "./Header.jsx";
 import Main from './Main.jsx';
 import Footer from './Footer.jsx';
@@ -18,24 +18,25 @@ import {register, authorize, checkToken} from "../utils/auth.js"
 
 function App() {
 
-  const [isEditProfilePopupOpen, setEditPopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setAddPopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [isDeletePopupOpen, setDeleteCardPopupOpen] = React.useState(false);
-  const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState({});
-  const [cards, setCards] = React.useState([]);
-  const [deleteCardId, setDeleteCardId] = React.useState("");
+  const [isEditProfilePopupOpen, setEditPopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setAddPopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [isDeletePopupOpen, setDeleteCardPopupOpen] = useState(false);
+  const [isImagePopupOpen, setImagePopupOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  const [deleteCardId, setDeleteCardId] = useState("");
 
-  const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
-  const [isSuccessInfoTooltipStatus, setSuccessInfoTooltipStatus] = React.useState(false);
-  const [loggedIn, setLoggedIn] = React.useState(false);
-  const [email, setEmail] = React.useState("");
+  const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
+  const [isSuccessInfoTooltipStatus, setSuccessInfoTooltipStatus] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (loggedIn) {
       Promise.all([api.getInfo(), api.getCards()])
       .then(([dataUser, dataCard]) => {
@@ -47,7 +48,7 @@ function App() {
   }, [loggedIn])
 
   // Проверка токена при загрузке страницы
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem('token');
     // если у пользователя есть токен в localStorage, 
     // функция проверит, действующий он или нет
@@ -180,6 +181,8 @@ function App() {
       closeAllPopups();
     })
     .catch((error => console.error(`Ошибка удаления карточки ${error}`))) 
+    .finally(() => setIsLoading(false))
+    setIsLoading(true)
   }
 
   function handleUpdateUser(dataUser, reset) {
@@ -189,7 +192,9 @@ function App() {
       closeAllPopups()
       reset()
     })
-    .catch((error) => console.log(`Ошибка редактирования профиля ${error}`));
+    .catch((error) => console.log(`Ошибка редактирования профиля ${error}`))
+    .finally(() => setIsLoading(false))
+    setIsLoading(true)
   }
 
   function handleUpdateAvatar(dataUser, reset){
@@ -199,7 +204,9 @@ function App() {
       closeAllPopups()
       reset()
     })
-    .catch((error) => console.log(`Ошибка обновления аватара ${error}`));
+    .catch((error) => console.log(`Ошибка обновления аватара ${error}`))
+    .finally(() => setIsLoading(false))
+    setIsLoading(true)
   }
 
   function handleAddPlace(cardInfo, reset){
@@ -209,7 +216,9 @@ function App() {
       closeAllPopups()
       reset()
     })
-    .catch((error) => console.log(`Ошибка добавления карточки ${error}`));
+    .catch((error) => console.log(`Ошибка добавления карточки ${error}`))
+    .finally(() => setIsLoading(false))
+    setIsLoading(true)
   }
 
   return (
@@ -251,21 +260,25 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}  
           onUpdateUser={handleUpdateUser} 
+          isLoading={isLoading}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlace}
+          isLoading={isLoading}
         />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
+          isLoading={isLoading}
         />
         <DeletePopupCard
           isOpen={isDeletePopupOpen}
           onClose={closeAllPopups}
           onCardDelete={handleDeleteSubmit}
+          isLoading={isLoading}
         />
       </div>
     </CurrentUserContext.Provider>

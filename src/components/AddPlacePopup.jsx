@@ -2,7 +2,7 @@ import React from "react";
 import useFormValidation from "../hooks/useFormValidation";
 import PopupWithForm from "./PopupWithForm"
 
-function AddPlacePopup ({isOpen, onClose, onAddPlace}) {
+function AddPlacePopup ({isOpen, onClose, onAddPlace, isLoading}) {
 
   const {handleChange, values, errors, isValid, isInputValid, reset} = useFormValidation();
 
@@ -19,7 +19,7 @@ function AddPlacePopup ({isOpen, onClose, onAddPlace}) {
     <PopupWithForm
     name="add"
     title="Новое место"
-    btnText="Создать"
+    btnText={isLoading ? "Сохранение..." : "Создать"}
     isOpen={isOpen}
     onClose={onClose}
     onSubmit={handleSubmit}
