@@ -3,8 +3,6 @@ import { Routes, Route, Link} from "react-router-dom";
 
 function Header({loggedIn, onLogout, email}) {
 
-  const buttonText = loggedIn ? "Выйти" : "";
-  
   return (
     <header className="header">
       <div className="header__logo"/>

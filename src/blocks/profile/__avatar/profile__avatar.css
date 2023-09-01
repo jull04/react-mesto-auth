@@ -10,11 +10,3 @@
     margin-right:  auto 0;
   }
 }
-
-@media  screen and (max-width: 767px) {
-  .profile__avatar {
-    margin: o auto;
-    align-items: center;
-    object-position: center center;
-  }
-}

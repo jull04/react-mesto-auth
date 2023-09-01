@@ -66,6 +66,4 @@
 @import url(./blocks/auth/__error/_visible/auth__error_visible.css);
 
 
-@import url(./blocks/auth/auth.css);
-@import url(./blocks/auth/__button/auth__button.css)
-@import url(./blocks/auth/__button/_disabled/auth__button_disabled.css);
+

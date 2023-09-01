@@ -28,7 +28,6 @@
   opacity: 0;
 }
 
-
 .profile__avatar-overlay:hover::before {
   opacity: 1;
   transition: opasity .3s linear;

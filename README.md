@@ -5,5 +5,9 @@
 # Страница проекта
 https://jull04.github.io/react-mesto-auth/
 
-# Технологии
-Проект реализован на React, структура проекта создана с помощью Create React App.
+## Используемые технологии
+* Проект реализован на React, структура проекта создана с помощью Create React App.
+* React Router
+* JavaScript, HTML, CSS
+* JSX
+* Добавлена регистрация пользователя
